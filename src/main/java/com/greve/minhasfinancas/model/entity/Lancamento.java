@@ -1,5 +1,7 @@
 package com.greve.minhasfinancas.model.entity;
 
+import com.greve.minhasfinancas.model.enums.StatusLancamento;
+import com.greve.minhasfinancas.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

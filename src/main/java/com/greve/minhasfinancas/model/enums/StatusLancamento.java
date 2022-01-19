@@ -1,4 +1,4 @@
-package com.greve.minhasfinancas.model.entity;
+package com.greve.minhasfinancas.model.enums;
 
 public enum StatusLancamento {
 
