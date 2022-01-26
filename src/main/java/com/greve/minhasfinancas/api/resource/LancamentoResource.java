@@ -8,6 +8,7 @@ import com.greve.minhasfinancas.model.enums.StatusLancamento;
 import com.greve.minhasfinancas.model.enums.TipoLancamento;
 import com.greve.minhasfinancas.service.LancamentoService;
 import com.greve.minhasfinancas.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +18,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/lancamentos")
+@RequiredArgsConstructor
 public class LancamentoResource {
 
-    private LancamentoService service;
-
-    private UsuarioService usuarioService;
-
-    public LancamentoResource(LancamentoService service) {
-        this.service = service;
-    }
+    private final LancamentoService service;
+    private final UsuarioService usuarioService;
 
     @GetMapping
     public ResponseEntity buscar(
