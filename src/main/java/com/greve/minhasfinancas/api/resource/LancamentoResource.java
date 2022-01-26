@@ -1,5 +1,6 @@
 package com.greve.minhasfinancas.api.resource;
 
+import com.greve.minhasfinancas.api.dto.AtualizaStatusDTO;
 import com.greve.minhasfinancas.api.dto.LancamentoDTO;
 import com.greve.minhasfinancas.exception.RegraNegocioException;
 import com.greve.minhasfinancas.model.entity.Lancamento;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +88,26 @@ public class LancamentoResource {
                 new ResponseEntity("Lançamento não encontrado na base de Dados.", HttpStatus.BAD_REQUEST));
     }
 
+    @PutMapping("{id}/atualiza-status")
+    public ResponseEntity atualizarStatus( @PathVariable Long id, @RequestBody AtualizaStatusDTO dto ) {
+        return service.obterPorId(id).map( entity -> {
+            StatusLancamento statusSelecionado = StatusLancamento.valueOf(dto.getStatus());
+            if(statusSelecionado == null) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Não foi possível atualizar o status do lançamento. Envie um status válido.");
+            }
+            try {
+                entity.setStatus(statusSelecionado);
+                service.atualizar(entity);
+                return ResponseEntity.ok(entity);
+            } catch (RegraNegocioException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }).orElseGet( () ->
+                new ResponseEntity("Lançamento não encontrado na base de Dados.", HttpStatus.BAD_REQUEST) );
+    }
+
     private Lancamento converter(LancamentoDTO dto) {
         Lancamento lancamento = new Lancamento();
         lancamento.setId(dto.getId());
@@ -99,10 +121,15 @@ public class LancamentoResource {
                 .orElseThrow( () -> new RegraNegocioException("Usuário não encontrado para o ID informado."));
 
         lancamento.setUsuario(usuario);
-        lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
-        lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+
+        if(dto.getTipo() != null) {
+            lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
+        }
+
+        if(dto.getStatus() != null) {
+            lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+        }
 
         return lancamento;
     }
-
 }
