@@ -31,6 +31,8 @@ public class LancamentoResource {
             @RequestParam(value = "descricao", required = false) String descricao,
             @RequestParam(value = "mes", required = false) Integer mes,
             @RequestParam(value = "ano", required = false) Integer ano,
+            @RequestParam(value= "tipo", required = false) TipoLancamento tipoLancamento,
+            @RequestParam(value = "status", required = false) StatusLancamento statusLancamento,
             @RequestParam("usuario") Long idUsuario
             ) {
 
@@ -38,6 +40,8 @@ public class LancamentoResource {
         lancamentoFiltro.setDescricao(descricao);
         lancamentoFiltro.setMes(mes);
         lancamentoFiltro.setAno(ano);
+        lancamentoFiltro.setTipo(tipoLancamento);
+        lancamentoFiltro.setStatus(statusLancamento);
 
         Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
         if(!usuario.isPresent()) {
